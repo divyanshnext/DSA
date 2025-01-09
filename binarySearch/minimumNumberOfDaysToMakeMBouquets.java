@@ -1,47 +1,47 @@
-public class minimumNumberOfDaysToMakeMBouquets{ 
-    public static void main(String[] args){
-        int[] bloomDay = {7,7,7,7,13,11,12,7};
-        int m = 2;
-        int k = 3;
-
-        minDay(bloomDay,m,k);
-    }
-    
-    public static int minDay(int[] bloomDay,int m,int k){
-        int size = bloomDay.length;
-
-        if(m*k>size) return -1;
-
-        int mini = Integer.MAX_VALUE;
-        int maxi = Integer.MIN_VALUE;
-
-        for(int i=0;i<=size;i++){
-            mini = Math.min(bloomDay[i],mini);
-            maxi = Math.max(bloomDay[i],maxi);
-        }
-
-        for(int i=mini;i<=maxi;i++){
-            if(possible(bloomDay,i,m,k)) return i;
-        }
-        return -1;
-    }
-
-    public static boolean possible(int[] bloomDay,int day,int m,int k){
-        int n = bloomDay.length;
-        int cnt = 0;
+class Solution {
+    public static boolean possible(int[] arr,int day,int m,int k){
+        int n = arr.length;
+        int count = 0; // it keeps track of consecutive flowers
         int noOfB = 0;
 
-        for(int i=0;i<=n;i++){
-            if(bloomDay[i] <= day) {
-                cnt++;
-            }
-            else{
-                noOfB += (cnt/k);
-                cnt = 0;
+        for(int i=0;i<n;i++){
+            if(arr[i]<=day){
+                count++;
+            } else{
+                noOfB += (count/k);
+                count =0;
             }
         }
-        noOfB += (cnt/k);
-        return noOfB>=m;
+        noOfB += (count/k);
+        return noOfB >= m;
+    }
+
+    public int minDays(int[] bloomDay, int m, int k) {
+        long val = (long)m*k;
+        int n = bloomDay.length;
+        if(val > n) return -1;
+
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        for(int i=0;i<n;i++){
+            min = Math.min(bloomDay[i],min);
+            max = Math.max(bloomDay[i],max);
+        }
+
+        int low = min;
+        int high = max;
+
+        while(low<=high){
+            int mid = (low+high)/2;
+            if(possible(bloomDay,mid,m,k)){
+                high = mid-1;
+            }
+            else{
+                low = mid+1;
+            }
+        }
+        return low;
     }
 
     
